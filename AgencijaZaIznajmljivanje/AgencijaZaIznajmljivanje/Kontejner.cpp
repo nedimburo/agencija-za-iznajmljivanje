@@ -1002,12 +1002,31 @@ void Kontejner::iznajmljivanje() {
 	// ODABIR AUTA
 	std::shared_ptr<Vozilo*> v = std::make_shared<Vozilo*>();
 	std::cout << "\nISPIS SVIH VOZILA AGENCIJE" << std::endl;
+	// UPDATE: Napravljen ispis za stanje vozila ukoliko je trenutno iznajmljeno (1.3.2023)
+	bool temp_provjera = false;
 	for (int i = 0; i < this->sva_vozila.size(); i++) {
-		std::cout<<"Indeks: "<< i << " | ID: " << sva_vozila[i]->getId() << " | Proizvodjac: " << sva_vozila[i]->getProizvodjac() << " | Model: " << sva_vozila[i]->getModel() << std::endl;
+		std::cout<<"Indeks: "<< i << " | ID: " << sva_vozila[i]->getId() << " | Proizvodjac: " << sva_vozila[i]->getProizvodjac() << " | Model: " << sva_vozila[i]->getModel();
+		for (int j = 0; j < this->getIznajmljivanja().size(); j++) {
+			if (this->getVozila()[i]->getId() == this->getIznajmljivanja()[j].getVozilo()->getId()) {
+				temp_provjera = true;
+				break;
+			}
+		}
+		if (temp_provjera) {
+			std::cout << " Stanje: ZAUZETO";
+			temp_provjera = false;
+		}
+		else {
+			std::cout << " Stanje: SLOBODNO";
+		}
+		std::cout << std::endl;
 	}
+	//
 	std::shared_ptr<int> odabir = std::make_shared<int>();
 	do {
-		std::cout << "Unesite indeks(0 - " << this->getVozila().size() - 1 << "): ";
+		// UPDATE: Prepravljen ispis (1.3.2023)
+		std::cout << "Odaberite indeks vozila za klijenta(0 - " << this->getVozila().size() - 1 << "): ";
+		//
 		std::cin >> *odabir;
 		if ((*odabir<0 || *odabir>this->getVozila().size() - 1) && !std::cin.fail()) {
 			std::cout << "[GRESKA] Uneseni indeks ne postoji. Unesite ponovo indeks." << std::endl;
