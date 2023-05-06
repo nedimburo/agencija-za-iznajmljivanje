@@ -597,22 +597,18 @@ void Kontejner::popuniPostojecaVozila() {
 			prolaz >> vrijednost;
 			if (vrijednost == "Kubikaza:") {
 				prolaz >> vrijednost;
-				//automobil->getMotor().setKubikazu(std::stoi(vrijednost));
 				temp.setKubikazu(std::stoi(vrijednost));
 			}
 			prolaz >> vrijednost;
 			if (vrijednost == "Gorivo:") {
 				prolaz >> vrijednost;
 				if (vrijednost == "Dizel") {
-					//automobil->getMotor().setTipGoriva(Gorivo::dizel);
 					temp.setTipGoriva(Gorivo::dizel);
 				}
 				else if (vrijednost == "Benzin") {
-					//automobil->getMotor().setTipGoriva(Gorivo::benzin);
 					temp.setTipGoriva(Gorivo::benzin);
 				}
 				else if (vrijednost == "Plin") {
-					//automobil->getMotor().setTipGoriva(Gorivo::plin);
 					temp.setTipGoriva(Gorivo::plin);
 				}
 				else {
@@ -623,7 +619,6 @@ void Kontejner::popuniPostojecaVozila() {
 			prolaz >> vrijednost;
 			if (vrijednost == "Snaga:") {
 				prolaz >> vrijednost;
-				//automobil->getMotor().setSnagu(std::stoi(vrijednost));
 				temp.setSnagu(std::stoi(vrijednost));
 			}
 			automobil->setMotor(temp);
@@ -633,22 +628,18 @@ void Kontejner::popuniPostojecaVozila() {
 			if (vrijednost == "Prijenos:") {
 				prolaz >> vrijednost;
 				if (vrijednost == "Manuelni") {
-					//automobil->getMjenjac().setPrijenos(Prijenos::manuelni);
 					temp2.setPrijenos(Prijenos::manuelni);
 				}
 				else if (vrijednost == "Automatik") {
-					//automobil->getMjenjac().setPrijenos(Prijenos::automatik);
 					temp2.setPrijenos(Prijenos::automatik);
 				}
 				else {
-					//automobil->getMjenjac().setPrijenos(Prijenos::polu_automatik);
 					temp2.setPrijenos(Prijenos::polu_automatik);
 				}
 			}
 			prolaz >> vrijednost;
 			if (vrijednost == "Brzine:") {
 				prolaz >> vrijednost;
-				//automobil->getMjenjac().setBrojBrzina(std::stoi(vrijednost));
 				temp2.setBrojBrzina(std::stoi(vrijednost));
 			}
 			automobil->setMjenjac(temp2);
@@ -717,33 +708,27 @@ void Kontejner::popuniPostojecaVozila() {
 			prolaz >> vrijednost;
 			if (vrijednost == "Kubikaza:") {
 				prolaz >> vrijednost;
-				//motocikl->getMotor().setKubikazu(std::stoi(vrijednost));
 				temp.setKubikazu(std::stoi(vrijednost));
 			}
 			prolaz >> vrijednost;
 			if (vrijednost == "Gorivo:") {
 				prolaz >> vrijednost;
 				if (vrijednost == "Dizel") {
-					//motocikl->getMotor().setTipGoriva(Gorivo::dizel);
 					temp.setTipGoriva(Gorivo::dizel);
 				}
 				else if (vrijednost == "Benzin") {
-					//motocikl->getMotor().setTipGoriva(Gorivo::benzin);
 					temp.setTipGoriva(Gorivo::benzin);
 				}
 				else if (vrijednost == "Plin") {
-					//motocikl->getMotor().setTipGoriva(Gorivo::plin);
 					temp.setTipGoriva(Gorivo::plin);
 				}
 				else {
-					//motocikl->getMotor().setTipGoriva(Gorivo::hibrid);
 					temp.setTipGoriva(Gorivo::hibrid);
 				}
 			}
 			prolaz >> vrijednost;
 			if (vrijednost == "Snaga:") {
 				prolaz >> vrijednost;
-				//motocikl->getMotor().setSnagu(std::stoi(vrijednost));
 				temp.setSnagu(std::stoi(vrijednost));
 			}
 			motocikl->setMotor(temp);
@@ -753,22 +738,18 @@ void Kontejner::popuniPostojecaVozila() {
 			if (vrijednost == "Prijenos:") {
 				prolaz >> vrijednost;
 				if (vrijednost == "Manuelni") {
-					//motocikl->getMjenjac().setPrijenos(Prijenos::manuelni);
 					temp2.setPrijenos(Prijenos::manuelni);
 				}
 				else if (vrijednost == "Automatik") {
-					//motocikl->getMjenjac().setPrijenos(Prijenos::automatik);
 					temp2.setPrijenos(Prijenos::automatik);
 				}
 				else {
-					//motocikl->getMjenjac().setPrijenos(Prijenos::polu_automatik);
 					temp2.setPrijenos(Prijenos::polu_automatik);
 				}
 			}
 			prolaz >> vrijednost;
 			if (vrijednost == "Brzine:") {
 				prolaz >> vrijednost;
-				//motocikl->getMjenjac().setBrojBrzina(std::stoi(vrijednost));
 				temp2.setBrojBrzina(std::stoi(vrijednost));
 			}
 			motocikl->setMjenjac(temp2);
@@ -936,6 +917,10 @@ void Kontejner::iznajmljivanje() {
 	if (this->getVozila().size() == 0) {
 		throw "[GRESKA] Ne moze se izvrsiti iznajmljivanje jer agencija nema nijedno vozilo.";
 	}
+	// UPDATE: Dodatna provjera ukoliko su sva vozila iznajmljena (6.5.2023)
+	if (this->getVozila().size() == this->getIznajmljivanja().size()) {
+		throw "[GRESKA] Ne moze se izvrsiti iznajmljivanje jer su sva vozila agencije su trenutno iznajmljena.";
+	}
 	std::shared_ptr<Iznajmljivanje> temp_iznajmljivanje = std::make_shared<Iznajmljivanje>();
 	std::shared_ptr<Klijent> k = std::make_shared<Klijent>();
 	// UNOS KLIJENTA
@@ -1048,7 +1033,7 @@ void Kontejner::iznajmljivanje() {
 	do {
 		std::cout << "Unesite broj dana iznajmljivanja: ";
 		std::cin >> temp_brdana;
-		if (temp_brdana < 0 && !std::cin.fail()) {
+		if (temp_brdana < 1 && !std::cin.fail()) {
 			std::cout << "[GRESKA] Uneseni broj dana mora biti veci od 0." << std::endl;
 		}
 		if (std::cin.fail()) {
@@ -1056,9 +1041,12 @@ void Kontejner::iznajmljivanje() {
 			std::cin.ignore(10000, '\n');
 			throw "[GRESKA] Pogresan nacin unosenja podatka. Probajte ponovo.";
 		}
-	} while (temp_brdana < 0);
+	} while (temp_brdana < 1);
 	temp_iznajmljivanje->setKlijent(*k);
-	this->getKlijenti().push_back(*k);
+	// UPDATE: Ukoliko se klijent ponavlja, on se nece spremiti u niz kako bi se izbjegle nepotrebne kopije (6.5.2023)
+	if (!postoji) {
+		this->getKlijenti().push_back(*k);
+	}
 	temp_iznajmljivanje->setVozilo(*v);
 	temp_iznajmljivanje->setBrojDana(temp_brdana);
 	this->getIznajmljivanja().push_back(*temp_iznajmljivanje);
@@ -1068,11 +1056,15 @@ void Kontejner::iznajmljivanje() {
 	unos.open("iznajmljivanje.txt", std::ios::app);
 	unos_klijenti.open("klijenti.txt", std::ios::app);
 	unos << "JMBG: " << temp_iznajmljivanje->getKlijent().getJmbg() << std::endl;
-	unos_klijenti << "JMBG: " << temp_iznajmljivanje->getKlijent().getJmbg() << std::endl;
-	unos_klijenti << "Ime: " << temp_iznajmljivanje->getKlijent().getIme() << std::endl;
-	unos_klijenti << "Prezime: " << temp_iznajmljivanje->getKlijent().getPrezime() << std::endl;
-	unos_klijenti << "Adresa: " << temp_iznajmljivanje->getKlijent().getAdresa() << std::endl;
-	unos_klijenti << "Telefon: " << temp_iznajmljivanje->getKlijent().getTelefon() << std::endl;
+	// UPDATE: Ukoliko se ponavlja klijent njegovi podaci se nece zapisivati ponovo u datoteku (6.5.2023)
+	// (kako bi se izbjegle nepotrebne kopije)
+	if (!postoji) {
+		unos_klijenti << "JMBG: " << temp_iznajmljivanje->getKlijent().getJmbg() << std::endl;
+		unos_klijenti << "Ime: " << temp_iznajmljivanje->getKlijent().getIme() << std::endl;
+		unos_klijenti << "Prezime: " << temp_iznajmljivanje->getKlijent().getPrezime() << std::endl;
+		unos_klijenti << "Adresa: " << temp_iznajmljivanje->getKlijent().getAdresa() << std::endl;
+		unos_klijenti << "Telefon: " << temp_iznajmljivanje->getKlijent().getTelefon() << std::endl;
+	}
 	unos << "ID: " << temp_iznajmljivanje->getVozilo()->getId() << std::endl;
 	unos << "Dana: " << temp_iznajmljivanje->getBrojDana() << std::endl;
 	unos_klijenti.close();
